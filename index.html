@@ -1,0 +1,100 @@
+<!-- Soit une page qui présente des images miniatures. Au survol de la souris, l’image est affichée dans sa taille réelle avec une légende.
+-->
+
+<!doctype html> 
+<html lang="fr"> 
+<head> 
+<meta charset="utf-8"> 
+<title>jQuery</title> 
+<script src="jquery.js"></script> 
+<script type="text/javascript"> 
+    //Définit le déport horizontal et vertical du pop-up de l’image par rapport au curseur, this fait référence à ce DOM 
+    this.zoom_image = function(){     
+        xOffset = 50; 
+        yOffset = 60;
+        //L’événement associé au curseur est transmis en paramètre à la fonction  
+        $("a.zoom").hover(function(e){ 
+            //le texte de l’attribut title est repris dans la variable texte.
+            this.texte = this.title; 
+            this.title = "";    
+            //Si l’attribut title est non vide, la légende de l’image (variable legende) est construite à partir du texte de celui-ci.
+            var legende = (this.texte != "") ? "<br/>" + this.texte : ""; 
+            //Le script insère alors dans le body un paragraphe avec l’identifiant zoom contenant l’image 
+            $("body").append("<p id='zoom'><img src='"+ this.href  
++"' alt='Visualisation image' />"+ legende +"</p>"); 
+            //affiché selon les propriétés de style top et left en ajoutant le décalage défini plus haut, à la position du curseur
+            $("#zoom") 
+            .css("top",(e.pageY - xOffset) + "px") 
+            .css("left",(e.pageX + yOffset) + "px") 
+            .fadeIn("slow");   
+        }, 
+        //Lorsque le curseur quitte la miniature ($("#zoom")), le pop-up de l’image disparaît.
+        function(){ 
+            this.title = this.texte;     
+            $("#zoom").remove(); 
+        }); 
+         //Le pop-up contenant l’image suit les mouvements du curseur
+        $("a.zoom").mousemove(function(e){ 
+            $("#zoom") 
+            .css("top",(e.pageY - xOffset) + "px") 
+            .css("left",(e.pageX + yOffset) + "px"); 
+        });             
+    }; 
+    //Toutes les fonctions étant à présent définies, jQuery peut mettre en œuvre la fonction zoom_image() au chargement du DOM
+    $(document).ready(function(){ 
+        zoom_image(); 
+    }); 
+</script> 
+<style> 
+    body { 
+        margin: 0px; 
+        padding: 10px; 
+        font:80% Arial, sans-serif; 
+    } 
+    h2 { 
+        clear:both; 
+        font-size:160%; 
+        font-weight:normal; 
+        margin: 0px; 
+        padding-top: 10px; 
+        padding-bottom: 15px; 
+    } 
+    a { 
+        text-decoration:none; 
+        color:black; 
+    } 
+    img { 
+        border: 1px solid black; 
+    } 
+    ul,li { 
+        margin: 0px; 
+        padding: 0px; 
+    } 
+    li {
+        list-style: none; 
+        float: left; 
+        display: inline; 
+        margin-right: 10px; 
+    } 
+    #zoom { 
+        position: absolute; 
+        border: 1px solid #333; 
+        background: #333; 
+        padding: 3px; 
+        display: none; 
+        color: #fff; 
+    } 
+</style> 
+</head> 
+<body> 
+<h2>Effet de zoom sur les images et<br>affichage des légendes</h2> 
+<ul> 
+    <li><a href="cert_andoid.png" class="zoom" title="Ours polaire en danger"> 
+<img src="pt_ours1.jpg" alt=""></a></li> 
+    <li><a href="cert_boostrap.png" class="zoom" title="Ours polaire en danger"> 
+<img src="pt_ours2.jpg" alt=""></a></li> 
+    <li><a href="cert_php.png" class="zoom" title="Ours polaire en danger"> 
+<img src="pt_ours3.jpg" alt=""></a></li> 
+</ul> 
+</body> 
+</html>
